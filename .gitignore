@@ -1,0 +1,4 @@
+corpus/
+*.pkl
+__pycache__/
+.vscode/
