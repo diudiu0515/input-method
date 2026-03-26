@@ -16,8 +16,8 @@ def main():
     unigram, bigram = train_from_corpus(corpus_dir, common_chars)
     total_uni_count = sum(unigram.values()) if unigram else 1
     end_train = time.time()
-    print(f"训练耗时: {end_train - start_train:.2f}秒", file=sys.stderr)
-    
+    print(f"二元模型训练耗时: {end_train - start_train:.2f}秒", file=sys.stderr)
+
     start_predict = time.time()
 
     for line in sys.stdin:
