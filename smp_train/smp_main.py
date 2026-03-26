@@ -58,12 +58,12 @@ def run_experiment(mode):
     out_file = f"output_{mode}.txt"
     predict_end = time.time()
     predict_duration = predict_end - predict_start
-    print(f"1. 训练耗时: {train_duration:.2f} 秒")
-    print(f"2. 预测耗时: {predict_duration:.2f} 秒 (共 {len(results)} 行)")
-    print(f"3. 总计运行: {time.time() - start_all:.2f} 秒")
+    print(f"1. 训练耗时: {train_duration:.2f} 秒",file=sys.stderr)
+    print(f"2. 预测耗时: {predict_duration:.2f} 秒 (共 {len(results)} 行)",file=sys.stderr)
+    print(f"3. 总计运行: {time.time() - start_all:.2f} 秒",file=sys.stderr)
     with open(out_file, 'w', encoding='utf-8') as f:
         f.write("\n".join(results))
-    print(f"模式 {mode} 测试完成，结果已保存至 {out_file}")
+    print(f"模式 {mode} 测试完成，结果已保存至 {out_file}",file=sys.stderr)
 
 if __name__ == "__main__":
     run_experiment("sina")

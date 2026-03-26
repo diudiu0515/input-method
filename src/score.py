@@ -24,4 +24,7 @@ def calculate_score(output_file, answer_file):
     print(f"字准确率: {char_correct / char_total * 100:.2f}%")
 
 if __name__ == "__main__":
-    calculate_score("data/output.txt", "data/answer.txt")
+    if len(sys.argv) > 1:
+        calculate_score(sys.argv[1], "data/answer.txt")
+    else:
+        calculate_score("data/output.txt", "data/answer.txt")

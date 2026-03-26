@@ -2,15 +2,21 @@ import json
 import re
 from collections import defaultdict
 
-def train_smp_only(file_path, common_chars,unigram=None,bigram=None):
+def train_smp_only(file_path, common_chars, unigram=None, bigram=None):
     if unigram is None: unigram = defaultdict(int)
     if bigram is None: bigram = defaultdict(int)
     regex_noise = re.compile(r'http[s]?://\S+|@\S+|#.*?#|\[.*?\]')
-    with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+    try:
+        f = open(file_path, 'r', encoding='utf-8')
+        test_line = f.readline()
+        f.seek(0)
+    except UnicodeDecodeError:
+        f = open(file_path, 'r', encoding='gbk', errors='ignore')
+    
+    with f:
         for line in f:
             try:
-                line_fixed = line.strip().replace("'", '"')
-                data = json.loads(line_fixed)
+                data = json.loads(line.strip())
                 content = data.get('content', '')
                 
                 text = regex_noise.sub('', content)
