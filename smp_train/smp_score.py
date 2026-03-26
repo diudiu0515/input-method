@@ -9,6 +9,9 @@ def run_all_tests():
     
     print("\n评测SMP模型:")
     calculate_score("output_smp.txt", "data/answer.txt")
+
+    print("\n评测WIKI模型:")
+    calculate_score("output_wiki.txt", "data/answer.txt")
     
     print("\n评测混合模型:")
     calculate_score("output_mixed.txt", "data/answer.txt")

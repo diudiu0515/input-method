@@ -1,34 +1,38 @@
 import json
 import re
-from collections import defaultdict
+from collections import defaultdict, Counter
 
-def train_smp_only(file_path, common_chars, unigram=None, bigram=None):
-    if unigram is None: unigram = defaultdict(int)
-    if bigram is None: bigram = defaultdict(int)
-    regex_noise = re.compile(r'http[s]?://\S+|@\S+|#.*?#|\[.*?\]')
-    try:
-        f = open(file_path, 'r', encoding='utf-8')
-        test_line = f.readline()
-        f.seek(0)
-    except UnicodeDecodeError:
-        f = open(file_path, 'r', encoding='gbk', errors='ignore')
+def train_smp_only(file_path, common_chars):
+    unigram = Counter()
+    bigram = Counter()
     
-    with f:
+    regex_hanzi = re.compile(r'[^\u4e00-\u9fa5]')
+    
+    with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
         for line in f:
-            try:
-                data = json.loads(line.strip())
-                content = data.get('content', '')
-                
-                text = regex_noise.sub('', content)
-                clean_res = [c if c in common_chars else ' ' for c in text]
-                
-                segments = "".join(clean_res).split()
-                for seg in segments:
-                    for i in range(len(seg)):
-                        unigram[seg[i]] += 1
-                        if i < len(seg) - 1:
-                            bigram[seg[i:i+2]] += 1
-            except:
-                continue
-                
+            line = line.strip()
+            if not line: continue
+            
+            content = ""
+            if line.startswith('{'):
+                try:
+                    data = json.loads(line)
+                    content = data.get('content', '')
+                except:
+                    content = line
+            else:
+                content = line
+
+            text = regex_hanzi.sub(' ', content)
+            
+            clean_res = [c if c in common_chars else ' ' for c in text]
+            segments = "".join(clean_res).split()
+
+            for seg in segments:
+                if len(seg) < 1: continue
+                for i in range(len(seg)):
+                    unigram[seg[i]] += 1
+                    if i < len(seg) - 1:
+                        bigram[seg[i:i+2]] += 1
+                        
     return unigram, bigram
